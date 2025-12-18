@@ -1,14 +1,29 @@
-#' Download and clean PM2.5 monitor data for a given year (County-based)
+#' Download Annual PM2.5 Monitoring Data (AirMonitor)
 #'
-#' This function loads annual PM2.5 from the AirMonitor package,
-#' reconstructs valid county FIPS codes using a lookup table,
-#' aggregates hourly values into daily county-level means,
-#' and returns a tidy dataset ready for ZIP3 weighting.
+#' This function retrieves daily PM2.5 measurements from the
+#' \pkg{AirMonitor} database for an entire calendar year. The result
+#' is returned as a tidy data frame with one row per monitor per day,
+#' including metadata such as state, county, and FIPS codes.
 #'
-#' @param year A numeric year (e.g., 2017)
+#' @param year Integer. The calendar year to download (e.g., `2017`).
 #'
 #' @return A tibble with columns:
-#'   date, county_fips, pm25
+#' \itemize{
+#'   \item \code{date} — Date of observation.
+#'   \item \code{state_fips}, \code{county_fips} — FIPS codes.
+#'   \item \code{county_name}, \code{state_abbr} — Geographic descriptors.
+#'   \item \code{pm25} — Daily average PM2.5 concentration (µg/m³).
+#' }
+#'
+#' @details
+#' The function uses \code{AirMonitor::airnow_loadAnnual()} to retrieve
+#' monitor-level data and reshapes it into a long daily time series.
+#' Only PM2.5 observations are retained.
+#'
+#' @examples
+#' \dontrun{
+#' pm25_2017 <- download_pm25_year(2017)
+#' }
 #'
 #' @export
 download_pm25_year <- function(year) {
